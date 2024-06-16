@@ -2,5 +2,5 @@ from setuptools import setup
 
 setup(
     name='opal_fetcher_mysql',
-    version='1.0.0',
+    version='1.0.1',
 )

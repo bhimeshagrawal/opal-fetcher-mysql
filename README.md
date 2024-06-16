@@ -13,7 +13,7 @@ An OPAL [custom fetch provider](https://docs.opal.ac/tutorials/write_your_own_fe
 
 This fetcher is both:
 
-- **A fully functional fetch-provider for Postgres:** can be used by OPAL to fetch data from MySQL DB.
+- **A fully functional fetch-provider for MySQL:** can be used by OPAL to fetch data from MySQL DB.
 - **Serving as an example** how to write custom fetch providers for OPAL and how to publish them as pip packages.
 
 ### How to try this custom fetcher in one command? (Example docker-compose configuration)
@@ -24,7 +24,7 @@ You can test this fetcher with the example docker compose file in this repositor
 docker compose up
 ```
 
-this docker compose configuration already correctly configures OPAL to load the Postgres Fetch Provider, and correctly configures `OPAL_DATA_CONFIG_SOURCES` to include an entry that uses this fetcher.
+this docker compose configuration already correctly configures OPAL to load the MySQL Fetch Provider, and correctly configures `OPAL_DATA_CONFIG_SOURCES` to include an entry that uses this fetcher.
 
 ### ✏️ How to use this fetcher in your OPAL Setup
 
@@ -103,7 +103,7 @@ Values for this fetcher config:
 
 ### 🚩 Possible User Issues
 
-While trying to send requests to a Postgres data source, you may encounter that the request fails. This can be caused by the format of the config entry URL for which the standard is:
+While trying to send requests to a mysql data source, you may encounter that the request fails. This can be caused by the format of the config entry URL for which the standard is:
 
 `mysql://<user>:<password>@<host>/<db>`
 

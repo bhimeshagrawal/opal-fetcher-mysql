@@ -13,7 +13,7 @@ An OPAL [custom fetch provider](https://docs.opal.ac/tutorials/write_your_own_fe
 
 This fetcher is both:
 
-- **A fully functional fetch-provider for Postgres:** can be used by OPAL to fetch data from MySQL DB.
+- **A fully functional fetch-provider for MySQL:** can be used by OPAL to fetch data from MySQL DB.
 - **Serving as an example** how to write custom fetch providers for OPAL and how to publish them as pip packages.
 
 ### How to try this custom fetcher in one command? (Example docker-compose configuration)
@@ -24,7 +24,7 @@ You can test this fetcher with the example docker compose file in this repositor
 docker compose up
 ```
 
-this docker compose configuration already correctly configures OPAL to load the Postgres Fetch Provider, and correctly configures `OPAL_DATA_CONFIG_SOURCES` to include an entry that uses this fetcher.
+this docker compose configuration already correctly configures OPAL to load the MySQL Fetch Provider, and correctly configures `OPAL_DATA_CONFIG_SOURCES` to include an entry that uses this fetcher.
 
 ### ✏️ How to use this fetcher in your OPAL Setup
 
@@ -97,14 +97,15 @@ Notice how `config` is an instance of `MySQLFetcherConfig` (code is in `opal_fet
 
 Values for this fetcher config:
 
-- The `url` is actually a mysql dsn. You can set the mysql password in the dsn itself if you want.
-- `connection_params` are optional, if you want to include certain overrides outside the dsn.
+- The `url` is actually a mysql dsn but this implementation uses connection params so `connection_params` are required.
 - Your `config` must include the `fetcher` key to indicate to OPAL that you use a custom fetcher.
 - Your `config` must include the `query` key to indicate what query to run against mysql.
 
 ### 🚩 Possible User Issues
 
-While trying to send requests to a Postgres data source, you may encounter that the request fails. This can be caused by the format of the config entry URL for which the standard is:
+While containerizing the package, you may run into docker-build issue, to avoid any such issues use `docker compose up --build` instead.
+
+While trying to send requests to mysql data source, you may encounter that the request fails. This can be caused by the format of the config entry URL for which the standard is:
 
 `mysql://<user>:<password>@<host>/<db>`
 
@@ -113,6 +114,8 @@ It might be most common that this request fails due to the password field being 
 In order to solve the issue, you need to change the data source config entry URL to the format shown below:
 
 `mysql://<host>/<db>?user=<user>&password=<password>`
+
+Most of the times if you set variables in connection paramas, you will not face any of these url issues.
 
 ### 📖 About OPAL (Open Policy Administration Layer)
 

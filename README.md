@@ -73,7 +73,7 @@ Example value of `OPAL_DATA_CONFIG_SOURCES` (formatted nicely, but in env var yo
   "config": {
     "entries": [
       {
-        "url": "mysql://root:mysql@example_db:5432/test?password=mysql",
+        "url": "mysql://root:mysql@example_db:3306/test?password=mysql",
         "config": {
           "fetcher": "MySQLFetchProvider",
           "query": "SELECT * from country;",

@@ -19,8 +19,8 @@ services:
       - SYS_NICE
     restart: always
     environment:
-      - MYSQL_DATABASE=mysql
-      - MYSQL_USER=mysql
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
       - MYSQL_PASSWORD=mysql
       - MYSQL_ROOT_PASSWORD=mysql
     logging:
@@ -29,6 +29,8 @@ services:
         max-file: "3"
     ports:
       - "3306:3306"
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   opal_server:
     image: permitio/opal-server:latest
@@ -37,7 +39,7 @@ services:
       - UVICORN_NUM_WORKERS=4
       - OPAL_POLICY_REPO_URL=https://github.com/permitio/opal-example-policy-repo
       - OPAL_POLICY_REPO_POLLING_INTERVAL=30
-      - OPAL_DATA_CONFIG_SOURCES={"config":{"entries":[{"url":"mysql://example_db:3306/mysql?user=mysql&password=mysql","config":{"fetcher":"MySQLFetchProvider","query":"SELECT * FROM user","connection_params":{"host":"example_db","user":"mysql","port":3306,"db":"mysql","password":"mysql"}},"topics":["mysql"],"dst_path":"mysql"}]}}
+      - OPAL_DATA_CONFIG_SOURCES={"config":{"entries":[{"url":"mysql://root:mysql@example_db:3306/test?password=mysql","config":{"fetcher":"MySQLFetchProvider","query":"SELECT * FROM country","connection_params":{"host":"example_db","user":"root","port":3306,"db":"test","password":"mysql"}},"topics":["mysql"],"dst_path":"countries"}]}}
     ports:
       - "7002:7002"
     depends_on:
@@ -61,4 +63,4 @@ services:
       - opal_server
       - example_db
 
-    command: sh -c "./wait-for.sh opal_server:7002 --timeout=20 -- ./start.sh"
+    command: sh -c "./wait-for.sh opal_server:7002 example_db:3306 --timeout=20 -- ./start.sh"

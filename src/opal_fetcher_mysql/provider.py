@@ -74,7 +74,7 @@ class MySQLFetchProvider(BaseFetchProvider):
 
         # connect to the mysql database
         try:
-            logger.debug("Connecting to database")
+            logger.debug(f"Connecting to database")
             self._connection: aiomysql.Connection = await aiomysql.connect(
                 host=connection_params.get("host"),
                 port=int(connection_params.get("port")),
@@ -82,16 +82,17 @@ class MySQLFetchProvider(BaseFetchProvider):
                 password=connection_params.get("password"),
                 db=connection_params.get("db"),
             )
-            logger.debug("Connected to database")
+            logger.debug(f"Connected to database")
             return self
         except Exception as e:
+            logger.error(f"{connection_params}")
             logger.error(f"Error connecting to database: {e}")
             raise
 
     async def __aexit__(self, exc_type=None, exc_val=None, tb=None):
         try:
             if self._connection is not None:
-                await self._connection.close()
+                self._connection.close()
                 logger.debug("Connection to database closed")
         except Exception as e:
             logger.error(f"Error closing database connection: {e}")
@@ -108,7 +109,7 @@ class MySQLFetchProvider(BaseFetchProvider):
         logger.debug(f"{self.__class__.__name__} fetching from {self._url}")
 
         try:
-            async with self._connection.cursor() as cursor:
+            async with self._connection.cursor(aiomysql.DictCursor) as cursor:
                 row = await cursor.execute(self._event.config.query)
                 if self._event.config.fetch_one:
                     return [row] if row is not None else []
@@ -119,20 +120,3 @@ class MySQLFetchProvider(BaseFetchProvider):
         except Exception as e:
             logger.error(f"Error fetching data from database: {e}")
             raise
-        
-#     async def _process_(self, records):
-#         self._event: MySQLFetchEvent  # type casting
-# 
-#         # when fetch_one is true, we want to return a dict (and not a list)
-#         if self._event.config.fetch_one:
-#             if records and len(records) > 0:
-#                 result = dict(records[0])
-#                 logger.debug("Processed data: {result}")
-#                 return dict(result)
-#             else:
-#                 logger.debug("Processed data: {}")
-#                 return {}
-#         else:
-#             result = [dict(record) for record in records]
-#             logger.debug(f"Processed data: {result}")
-#             return result
